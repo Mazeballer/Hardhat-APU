@@ -10,7 +10,7 @@ cd Hardhat-APU/contracts
 ## 2. Install Dependencies
 
 ```bash
-pnpm install    # or npm install
+pnpm install 
 ```
 
 ## 3. Start the Local Blockchain
