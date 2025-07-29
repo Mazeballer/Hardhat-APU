@@ -1,5 +1,6 @@
 import '@nomicfoundation/hardhat-viem';
 import './scripts/deploy-viem';
+import './scripts/deploy-lendingPool.ts';
 
 import { HardhatUserConfig } from 'hardhat/config';
 
