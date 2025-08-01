@@ -6,7 +6,7 @@ async function main() {
 
   const [deployer] = await ethers.getSigners();
 
-  const contractAddress = '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9'; // ✅ Replace with your actual address
+  const contractAddress = '0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9'; 
 
   const lendingPool = await ethers.getContractAt(
     'LendingPool',
