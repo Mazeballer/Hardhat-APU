@@ -5,7 +5,7 @@ import type { Address } from 'viem';
 
 task('deploy-lendingPool', 'Deploy LendingPool contract').setAction(
   async (_args, hre: HardhatRuntimeEnvironment & any) => {
-    const artifact = require('../artifacts/contracts/LendingPool.sol/LendingPool.json');
+    const artifact = require('../artifacts/contracts/LendingPool.sol/LendingBorrowingPool.json');
 
     const publicClient = await hre.viem.getPublicClient();
     const accounts = (await publicClient.request({
