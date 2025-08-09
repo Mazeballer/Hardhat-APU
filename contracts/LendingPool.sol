@@ -57,6 +57,8 @@ contract LendingBorrowingPool {
 
     event Debug(string label, uint256 value);
 
+    event Repaid(uint256 loanId, address indexed borrower, uint256 amount, uint256 repaidAt);
+
     function deposit(uint256 apyBps) external payable {
         require(msg.value > 0, "Send some ETH");
         require(apyBps <= BPS_DIVISOR, "Invalid APY");
@@ -130,6 +132,77 @@ contract LendingBorrowingPool {
 
         nextLoanId++;
     }
+
+    // helper for UI/API
+    function getLoan(address user, uint256 loanId) external view returns (
+        uint256 amount,
+        bool active,
+        address borrower,
+        uint256 collateral
+    ) {
+        Loan[] storage arr = loans[user];
+        for (uint i = 0; i < arr.length; i++) {
+            if (arr[i].id == loanId) {
+                Loan storage L = arr[i];
+                return (L.amount, L.active, L.borrower, L.collateral);
+            }
+        }
+        revert("loan not found");
+    }
+
+    function repayLoan() external payable {
+        Loan[] storage userLoans = loans[msg.sender];
+        require(userLoans.length > 0, "No loans found");
+
+        bool found = false;
+        for (uint256 i = 0; i < userLoans.length; i++) {
+            if (userLoans[i].active) {
+                Loan storage loan = userLoans[i];
+                require(msg.sender == loan.borrower, "Not the borrower");
+                require(msg.value >= loan.amount, "Insufficient repayment amount");
+
+                loan.active = false;
+
+                // Return collateral
+                (bool success, ) = payable(msg.sender).call{value: loan.collateral}("");
+                require(success, "Collateral return failed");
+
+                emit Repaid(loan.id, msg.sender, msg.value, block.timestamp);
+                found = true;
+                break;
+            }
+        }
+        require(found, "Active loan not found");
+    }
+
+    // testing-only bypass: repay + return collateral in a single call
+    function repayLoanBypass(
+        uint256 loanId,
+        uint256 amountDueWei,     // full amount owed (principal+interest)
+        address borrower,
+        uint256 collateralWei     // collateral to be returned to borrower
+    ) external payable {
+        require(msg.sender == borrower, "Not the borrower");
+
+
+        require(msg.value >= amountDueWei, "Insufficient repayment amount");
+
+        // Return collateral from contract balance
+        if (collateralWei > 0) {
+            (bool ok1,) = payable(borrower).call{value: collateralWei}("");
+            require(ok1, "Collateral return failed");
+        }
+
+        // Refund any accidental overpayment
+        uint256 change = msg.value - amountDueWei;
+        if (change > 0) {
+            (bool ok2,) = payable(msg.sender).call{value: change}("");
+            require(ok2, "Change refund failed");
+        }
+
+        emit Repaid(loanId, borrower, amountDueWei, block.timestamp);
+    }
+
 
     function calculateInterest(DepositInfo memory d) public view returns (uint256 interest) {
         if (d.amount == 0 || d.depositedAt == 0) return 0;

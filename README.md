@@ -10,16 +10,17 @@ cd Hardhat-APU/contracts
 ## 2. Install Dependencies
 
 ```bash
-pnpm install 
+pnpm install
 ```
 
-## 3. Start the Local Blockchain
+## 3. Start the Local Blockchain and the lending pool
 
 ```bash
 npx hardhat node
+npx hardhat deploy-lendingPool --network localhost
 ```
 
-* This launches a local node at **[http://127.0.0.1:8545](http://127.0.0.1:8545)** with 20 test accounts (10000 ETH each).
+- This launches a local node at **[http://127.0.0.1:8545](http://127.0.0.1:8545)** with 20 test accounts (10000 ETH each).
 
 ## 4. Deploy Contracts Locally
 
@@ -34,10 +35,11 @@ npx hardhat run scripts/deploy.ts --network localhost
 1. Open MetaMask and go to **Settings → Networks → Add a network**.
 2. Enter:
 
-   * **Network Name:** Hardhat Local
-   * **RPC URL:** [http://127.0.0.1:8545](http://127.0.0.1:8545)
-   * **Chain ID:** 31337
-   * **Currency:** ETH
+   - **Network Name:** Hardhat Local
+   - **RPC URL:** [http://127.0.0.1:8545](http://127.0.0.1:8545)
+   - **Chain ID:** 31337
+   - **Currency:** ETH
+
 3. Save and switch to this network.
 
 ## 6. Import Test Accounts

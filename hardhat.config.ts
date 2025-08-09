@@ -1,15 +1,15 @@
-import '@nomicfoundation/hardhat-viem';
-import './scripts/deploy-viem';
-import './scripts/deploy-lendingPool.ts';
+import "@nomicfoundation/hardhat-viem";
+import "./scripts/deploy-viem";
+import "./scripts/deploy-lendingPool.ts";
 
-import { HardhatUserConfig } from 'hardhat/config';
+import { HardhatUserConfig } from "hardhat/config";
 
 const config: HardhatUserConfig = {
-  solidity: '0.8.28',
+  solidity: "0.8.28",
   networks: {
     localhost: {
       chainId: 31337,
-      url: 'http://127.0.0.1:8545',
+      url: "http://127.0.0.1:8545",
     },
   },
 };

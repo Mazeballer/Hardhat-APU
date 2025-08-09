@@ -1,15 +1,15 @@
 // scripts/deploy-viem.ts
-import { task } from 'hardhat/config';
-import artifact from '../artifacts/contracts/Lock.sol/Lock.json';
-import type { Address } from 'viem';
+import { task } from "hardhat/config";
+import artifact from "../artifacts/contracts/Lock.sol/Lock.json";
+import type { Address } from "viem";
 
-task('deploy', 'Deploy Lock with Viem').setAction(async (_args, hre) => {
+task("deploy", "Deploy Lock with Viem").setAction(async (_args, hre) => {
   // 1️⃣ Await the PublicClient promise
   const publicClient = await hre.viem.getPublicClient();
 
   // 2️⃣ Bypass strict typing on request (eth_accounts isn't in Viem's built-in JSON-RPC types)
   const accounts = (await (publicClient.request as any)({
-    method: 'eth_accounts',
+    method: "eth_accounts",
     params: [],
   })) as Address[];
   const deployer = accounts[0];
@@ -24,5 +24,5 @@ task('deploy', 'Deploy Lock with Viem').setAction(async (_args, hre) => {
     args: [123],
   });
 
-  console.log('🔒 Lock deployed to:', deployedAddress);
+  console.log("🔒 Lock deployed to:", deployedAddress);
 });
